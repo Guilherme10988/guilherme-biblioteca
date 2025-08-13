@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Biblioteca Viva</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0b1020;
+      --surface: #111731;
+      --surface-2: #0e142b;
+      --text: #e6e9f4;
+      --muted: #9aa2c7;
+      --brand: #7c4dff;
+      --brand-2: #00ddeb;
+      --ring: rgba(124,77,255,.45);
+      --ok: #3ddc84;
+      --warn:#ffb020;
+      --danger:#ff5470;
+      --shadow: 0 10px 30px rgba(0,0,0,.35), 0 4px 10px rgba(0,0,0,.25);
+      --glass: rgba(255,255,255,.06);
+      --card-radius: 18px;
+      --button-radius: 14px;
+    }
+    .light{
+      --bg: #f6f7fb;
+      --surface:#ffffff;
+      --surface-2:#f1f3fb;
+      --text:#121528;
+      --muted:#56608a;
+      --brand:#5b34f5;
+      --brand-2:#00bcd4;
+      --ring: rgba(91,52,245,.35);
+      --shadow: 0 10px 28px rgba(26,27,40,.12), 0 4px 12px rgba(26,27,40,.08);
+      --glass: rgba(0,0,0,.04);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:var(--text);
+      background:
+        radial-gradient(1200px 1200px at -10% -10%, rgba(124,77,255,.20), transparent 45%),
+        radial-gradient(1000px 1000px at 110% 10%, rgba(0,221,235,.16), transparent 40%),
+        linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 30% 100%);
+      min-height:100%;
+    }
+    a{color:inherit}
+    .container{max-width:1200px; margin-inline:auto; padding:24px}
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:40; backdrop-filter:saturate(140%) blur(8px);
+      background:linear-gradient(180deg, var(--surface-2), transparent);
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .nav{
+      display:flex; align-items:center; gap:14px; justify-content:space-between;
+    }
+    .brand{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.2px}
+    .logo{
+      width:36px;height:36px;border-radius:12px; display:grid; place-items:center;
+      background:conic-gradient(from 220deg, var(--brand), var(--brand-2));
+      color:white; box-shadow:var(--shadow);
+      font-weight:900;
+    }
+    .searchbar{flex:1; display:flex; align-items:center; gap:10px; max-width:540px; margin-inline:16px}
+    .searchbar input{
+      width:100%; padding:12px 16px 12px 44px; border-radius:14px; border:1px solid transparent;
+      background: linear-gradient(180deg, var(--surface), var(--surface-2));
+      color:var(--text); outline:none; box-shadow:var(--shadow);
+      transition:border .2s, transform .06s;
+    }
+    .searchbar input:focus{border-color:var(--ring);}
+    .searchbar .icon{position:relative; left:36px; pointer-events:none; opacity:.7}
+
+    .actions{display:flex; align-items:center; gap:10px}
+    .btn{
+      padding:10px 14px; border:none; border-radius:var(--button-radius); cursor:pointer;
+      background:linear-gradient(180deg, var(--surface), var(--surface-2)); color:var(--text);
+      display:inline-flex; align-items:center; gap:8px; box-shadow:var(--shadow); transition:transform .06s;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:white}
+    .btn.ghost{background:transparent; box-shadow:none; border:1px solid rgba(255,255,255,.12)}
+    .toggle{width:48px;height:32px;border-radius:999px; position:relative; background:var(--surface); border:1px solid rgba(255,255,255,.15)}
+    .dot{position:absolute; top:50%; transform:translateY(-50%); left:4px; width:24px; height:24px; border-radius:999px; background:linear-gradient(180deg,#fff,#e6e6e6); transition:left .2s}
+    body.light .dot{left:20px}
+
+    /* Hero */
+    .hero{ margin-top:18px; border-radius:24px; padding:28px; background:linear-gradient(180deg, var(--glass), transparent); border:1px solid rgba(255,255,255,.08); box-shadow:var(--shadow);}
+    .hero h1{margin:0 0 8px; font-size:32px}
+    .hero p{margin:0; color:var(--muted)}
+
+    /* Toolbar */
+    .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between; margin:18px 0}
+    .group{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
+    .select, .input{padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.12); background:linear-gradient(180deg, var(--surface), var(--surface-2)); color:var(--text)}
+    .badge{padding:6px 10px; border-radius:999px; background:rgba(124,77,255,.18); border:1px solid var(--ring); font-weight:600}
+
+    /* Grid */
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:18px}
+    .card{grid-column:span 12; background:linear-gradient(180deg, var(--surface), var(--surface-2)); border:1px solid rgba(255,255,255,.08); border-radius:var(--card-radius); overflow:hidden; box-shadow:var(--shadow); display:flex; gap:16px; padding:16px}
+    .cover{width:110px; min-width:110px; height:160px; border-radius:12px; display:grid; place-items:end; padding:10px; color:white; font-weight:700; line-height:1.1; letter-spacing:.1px; text-shadow:0 2px 8px rgba(0,0,0,.45)}
+    .meta{flex:1; display:flex; flex-direction:column; gap:10px}
+    .title{font-weight:800; font-size:18px; margin:0}
+    .author{color:var(--muted); margin:0}
+    .tags{display:flex; gap:8px; flex-wrap:wrap}
+    .tag{padding:6px 10px; border-radius:999px; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); font-size:12px}
+    .rating{display:flex; align-items:center; gap:2px}
+    .actions-row{display:flex; gap:10px; margin-top:auto;}
+
+    /* List mode */
+    .list .card{align-items:center}
+    .list .cover{width:80px;min-width:80px;height:112px}
+
+    /* Responsive */
+    @media(min-width:640px){ .card{grid-column:span 6} }
+    @media(min-width:900px){ .card{grid-column:span 4} }
+
+    /* Modal */
+    dialog{ border:none; border-radius:20px; padding:0; color:var(--text); background:linear-gradient(180deg, var(--surface), var(--surface-2)); box-shadow:var(--shadow); width:min(720px, 92vw); }
+    .modal-head{display:flex; justify-content:space-between; align-items:center; padding:18px 20px; border-bottom:1px solid rgba(255,255,255,.08)}
+    .modal-body{padding:20px}
+    .modal-actions{display:flex; gap:10px; padding:16px 20px; border-top:1px solid rgba(255,255,255,.08); justify-content:flex-end}
+    dialog::backdrop{background:rgba(0,0,0,.6)}
+
+    /* Floating Add Button */
+    .fab{position:fixed; right:22px; bottom:22px; padding:14px 16px; border-radius:999px; background:linear-gradient(135deg, var(--brand), var(--brand-2)); color:white; border:none; box-shadow:var(--shadow); display:flex; align-items:center; gap:8px; cursor:pointer}
+
+    footer{opacity:.8; padding:28px 0; text-align:center}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo">BV</div>
+        <div>
+          <div style="font-size:14px;opacity:.8">Projeto</div>
+          <div style="font-size:18px;line-height:1">Biblioteca Guilherme</div>
+        </div>
+      </div>
+
+      <div class="searchbar">
+        <svg class="icon" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/></svg>
+        <input id="q" type="search" placeholder="Buscar por título, autor, categoria..." aria-label="Buscar livros" />
+      </div>
+
+      <div class="actions">
+        <button id="btnFav" class="btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 21s-7-4.35-7-10a4 4 0 0 1 7-2.65A4 4 0 0 1 19 11c0 5.65-7 10-7 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Favoritos</button>
+        <button id="toggleTheme" class="toggle" aria-label="Alternar tema"><span class="dot"></span></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Seja bem vindo ✨</h1>
+      <p>Pesquise, filtre e organize suas escolhas .</p>
+    </section>
+
+    <section class="toolbar">
+      <div class="group">
+        <select id="category" class="select" aria-label="Filtrar por categoria"></select>
+        <select id="sortBy" class="select" aria-label="Ordenar por">
+          <option value="title">Ordenar: Título (A–Z)</option>
+          <option value="author">Ordenar: Autor (A–Z)</option>
+          <option value="year">Ordenar: Ano (mais novo)</option>
+          <option value="rating">Ordenar: Nota (maior)</option>
+        </select>
+        <button id="viewGrid" class="btn" title="Modo grade">Grade</button>
+        <button id="viewList" class="btn" title="Modo lista">Lista</button>
+      </div>
+      <div class="group">
+        <span class="badge"><span id="count">0</span> resultados</span>
+      </div>
+    </section>
+
+    <section id="grid" class="grid" aria-live="polite"></section>
+  </main>
+
+  <button class="fab" id="addBookBtn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    Adicionar livro
+  </button>
+
+  <!-- Modal Detalhes -->
+  <dialog id="details">
+    <div class="modal-head">
+      <strong>Detalhes do livro</strong>
+      <button class="btn ghost" onclick="details.close()">Fechar</button>
+    </div>
+    <div class="modal-body" id="detailsBody"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="details.close()">Ok</button>
+    </div>
+  </dialog>
+
+  <!-- Modal Favoritos -->
+  <dialog id="favorites">
+    <div class="modal-head">
+      <strong>Meus favoritos</strong>
+      <button class="btn ghost" onclick="favorites.close()">Fechar</button>
+    </div>
+    <div class="modal-body"><div id="favList"></div></div>
+  </dialog>
+
+  <!-- Modal Adicionar -->
+  <dialog id="addModal">
+    <form method="dialog" id="addForm" onsubmit="return false">
+      <div class="modal-head">
+        <strong>Adicionar novo livro</strong>
+        <button class="btn ghost" onclick="addModal.close()">Fechar</button>
+      </div>
+      <div class="modal-body" style="display:grid; gap:12px">
+        <input class="input" name="title" placeholder="Título" required />
+        <input class="input" name="author" placeholder="Autor" required />
+        <input class="input" name="year" placeholder="Ano" inputmode="numeric" pattern="\\d{4}" required />
+        <input class="input" name="category" placeholder="Categoria (ex: Fantasia)" required />
+        <textarea class="input" name="description" placeholder="Descrição" rows="3"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" onclick="addModal.close()">Cancelar</button>
+        <button class="btn primary" id="saveBook">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer class="container">
+    <small>Feito com ❤ em HTML, CSS e JS. Personalize como quiser.</small>
+  </footer>
+
+  <script>
+    const el = (sel, root=document) => root.querySelector(sel);
+    const els = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+    // ==== Dados iniciais ====
+    const baseBooks = [
+      { id: crypto.randomUUID(), title: 'Dom Casmurro', author: 'Machado de Assis', year: 1899, category: 'Clássico Brasileiro', rating: 5, description: 'Um dos maiores romances da literatura brasileira, narrado por Bento Santiago.' },
+      { id: crypto.randomUUID(), title: 'Capitães da Areia', author: 'Jorge Amado', year: 1937, category: 'Romance', rating: 4, description: 'A infância marginalizada em Salvador na década de 1930.' },
+      { id: crypto.randomUUID(), title: 'O Alienista', author: 'Machado de Assis', year: 1882, category: 'Sátira', rating: 4, description: 'Clássico sobre ciência, loucura e poder na cidade de Itaguaí.' },
+      { id: crypto.randomUUID(), title: 'Harry Potter e a Pedra Filosofal', author: 'J. K. Rowling', year: 1997, category: 'Fantasia', rating: 5, description: 'O início da jornada do bruxo mais famoso do mundo.' },
+      { id: crypto.randomUUID(), title: 'O Pequeno Príncipe', author: 'Antoine de Saint-Exupéry', year: 1943, category: 'Fábula', rating: 5, description: 'Poético e filosófico, uma obra para todas as idades.' },
+      { id: crypto.randomUUID(), title: '1984', author: 'George Orwell', year: 1949, category: 'Distopia', rating: 5, description: 'Vigilância, controle e liberdade em um regime totalitário.' },
+      { id: crypto.randomUUID(), title: 'Clean Code', author: 'Robert C. Martin', year: 2008, category: 'Tecnologia', rating: 5, description: 'Práticas para escrever código legível e sustentável.' },
+      { id: crypto.randomUUID(), title: 'Senhor dos Anéis: A Sociedade do Anel', author: 'J. R. R. Tolkien', year: 1954, category: 'Fantasia', rating: 5, description: 'A jornada começa rumo a Mordor.' },
+      { id: crypto.randomUUID(), title: 'Dom Quixote', author: 'Miguel de Cervantes', year: 1605, category: 'Clássico', rating: 5, description: 'As aventuras do cavaleiro da triste figura e seu fiel escudeiro.' },
+      { id: crypto.randomUUID(), title: 'Orgulho e Preconceito', author: 'Jane Austen', year: 1813, category: 'Romance', rating: 4, description: 'Amor, classe e costumes na Inglaterra do século XIX.' },
+    ];
+
+    // ==== Estado ====
+    const state = {
+      books: JSON.parse(localStorage.getItem('bv_books') || 'null') || baseBooks,
+      favorites: JSON.parse(localStorage.getItem('bv_favs') || '[]'),
+      query: '',
+      category: 'todas',
+      sortBy: 'title',
+      view: localStorage.getItem('bv_view') || 'grid',
+      theme: localStorage.getItem('bv_theme') || 'dark',
+    };
+
+    // ==== Tema ====
+    const applyTheme = () => {
+      if(state.theme === 'light') document.body.classList.add('light');
+      else document.body.classList.remove('light');
+      localStorage.setItem('bv_theme', state.theme);
+    };
+
+    const toggleTheme = () => {
+      state.theme = state.theme === 'dark' ? 'light' : 'dark';
+      applyTheme();
+    };
+
+    // ==== Util ====
+    const by = (key, desc=false) => (a,b)=>{
+      if(key==='year' || key==='rating') return desc ? b[key]-a[key] : a[key]-b[key];
+      const A=(a[key]||'').toString().toLowerCase();
+      const B=(b[key]||'').toString().toLowerCase();
+      if(A<B) return -1; if(A>B) return 1; return 0;
+    };
+    const unique = (arr)=>[...new Set(arr)];
+
+    function coverStyle(title){
+      // Gera gradiente baseado no título (hash simples)
+      let h = 0; for(let i=0;i<title.length;i++) h = (h*31 + title.charCodeAt(i))>>>0;
+      const hue1 = h % 360;
+      const hue2 = (h*7) % 360;
+      return `background: linear-gradient(135deg, hsl(${hue1} 80% 45%), hsl(${hue2} 80% 55%));`;
+    }
+
+    function starSVG(fill){
+      return `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27Z" stroke="currentColor" fill="${fill? 'currentColor':'none'}" stroke-width="1.6"/></svg>`;
+    }
+
+    // ==== Render ====
+    function render(){
+      const grid = el('#grid');
+      grid.classList.toggle('list', state.view==='list');
+
+      let list = [...state.books];
+      // filtro
+      if(state.category!=='todas') list = list.filter(b=>b.category.toLowerCase()===state.category);
+      if(state.query){
+        const q = state.query.toLowerCase();
+        list = list.filter(b=> `${b.title} ${b.author} ${b.category}`.toLowerCase().includes(q));
+      }
+      // ordenar
+      const desc = state.sortBy==='year' || state.sortBy==='rating';
+      list.sort(by(state.sortBy, desc));
+
+      el('#count').textContent = list.length;
+
+      grid.innerHTML = list.map(b=>{
+        const fav = state.favorites.includes(b.id);
+        const stars = Array.from({length:5}, (_,i)=> starSVG(i < (b.rating||0))).join('');
+        return `
+          <article class="card" data-id="${b.id}">
+            <div class="cover" style="${coverStyle(b.title)}">
+              <div style="font-size:12px; opacity:.9">${b.year||''}</div>
+            </div>
+            <div class="meta">
+              <h3 class="title">${b.title}</h3>
+              <p class="author">${b.author} · <span class="tag">${b.category}</span></p>
+              <div class="rating" aria-label="Nota">${stars}</div>
+              <div class="actions-row">
+                <button class="btn" onclick="openDetails('${b.id}')">Detalhes</button>
+                <button class="btn ${fav?'primary':''}" onclick="toggleFav('${b.id}')">${fav ? 'Remover favorito' : 'Adicionar favorito'}</button>
+              </div>
+            </div>
+          </article>`;
+      }).join('');
+    }
+
+    function openDetails(id){
+      const b = state.books.find(x=>x.id===id);
+      if(!b) return;
+      el('#detailsBody').innerHTML = `
+        <div style="display:flex; gap:16px">
+          <div class="cover" style="${coverStyle(b.title)}; width:120px; height:176px"></div>
+          <div style="flex:1; display:flex; flex-direction:column; gap:6px">
+            <div class="tags"><span class="tag">${b.category}</span><span class="tag">${b.year}</span></div>
+            <h3 class="title" style="font-size:22px">${b.title}</h3>
+            <p class="author">de <strong>${b.author}</strong></p>
+            <p style="opacity:.9">${b.description||''}</p>
+          </div>
+        </div>
+      `;
+      details.showModal();
+    }
+
+    function toggleFav(id){
+      const i = state.favorites.indexOf(id);
+      if(i>-1) state.favorites.splice(i,1); else state.favorites.push(id);
+      localStorage.setItem('bv_favs', JSON.stringify(state.favorites));
+      render();
+    }
+
+    function renderFavs(){
+      const wrap = el('#favList');
+      const items = state.favorites.map(id=> state.books.find(b=>b.id===id)).filter(Boolean);
+      if(!items.length){ wrap.innerHTML = '<p class="author">Nenhum favorito ainda.</p>'; return; }
+      wrap.innerHTML = items.map(b=>`<div style="display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px dashed rgba(255,255,255,.12)"><div class="cover" style="${coverStyle(b.title)}; width:60px; height:90px"></div><div style="flex:1"><strong>${b.title}</strong><div class="author">${b.author} · ${b.year}</div></div><button class="btn" onclick="toggleFav('${b.id}')">Remover</button></div>`).join('');
+    }
+
+    // ==== Categoria select ====
+    function buildCategories(){
+      const cats = ['todas', ...unique(state.books.map(b=> b.category.toLowerCase()))];
+      el('#category').innerHTML = cats.map(c=>`<option ${c===state.category?'selected':''} value="${c}">${c[0].toUpperCase()+c.slice(1)}</option>`).join('');
+    }
+
+    // ==== Adição de livros ====
+    function addBookFromForm(){
+      const form = el('#addForm');
+      const data = Object.fromEntries(new FormData(form).entries());
+      const book = {
+        id: crypto.randomUUID(),
+        title: data.title.trim(),
+        author: data.author.trim(),
+        year: Number(data.year),
+        category: data.category.trim(),
+        rating: 4,
+        description: (data.description||'').trim()
+      };
+      state.books.push(book);
+      localStorage.setItem('bv_books', JSON.stringify(state.books));
+      buildCategories();
+      render();
+      addModal.close();
+      form.reset();
+    }
+
+    // ==== Eventos ====
+    function init(){
+      // tema
+      applyTheme();
+      el('#toggleTheme').addEventListener('click', toggleTheme);
+
+      // busca
+      let t; el('#q').addEventListener('input', (e)=>{ clearTimeout(t); t=setTimeout(()=>{ state.query = e.target.value; render(); }, 120); });
+
+      // selects e view
+      el('#category').addEventListener('change', e=>{ state.category = e.target.value; render(); });
+      el('#sortBy').addEventListener('change', e=>{ state.sortBy = e.target.value; render(); });
+      el('#viewGrid').addEventListener('click', ()=>{ state.view='grid'; localStorage.setItem('bv_view','grid'); render(); });
+      el('#viewList').addEventListener('click', ()=>{ state.view='list'; localStorage.setItem('bv_view','list'); render(); });
+
+      // favoritos
+      el('#btnFav').addEventListener('click', ()=>{ renderFavs(); favorites.showModal(); });
+
+      // adicionar
+      el('#addBookBtn').addEventListener('click', ()=> addModal.showModal());
+      el('#saveBook').addEventListener('click', addBookFromForm);
+
+      // primeira renderização
+      buildCategories();
+      render();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
